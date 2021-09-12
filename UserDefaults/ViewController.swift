@@ -13,16 +13,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var secondNameTextField: UITextField!
     
+    private var user = User()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        userNameLabel.isHidden = true
-        
-        if let userName = UserDefaults.standard.value(forKey: "userName") {
-            userNameLabel.isHidden = false
-            userNameLabel.text = userName as? String
-        }
+//        user = StorageManager.shared.getUser()
+        user = StorageManager.shared.getUserFromFile()
+        userNameLabel.text = "\(user.name) \(user.surname)"
     }
 
     @IBAction func donePressed() {
@@ -42,9 +40,11 @@ class ViewController: UIViewController {
         } else if let _ = Double(secondName) {
             wrongFormatAlert()
         } else {
-            userNameLabel.isHidden = false
             userNameLabel.text = firstName + " " + secondName
-            UserDefaults.standard.set(userNameLabel.text, forKey: "userName")
+            user.name = firstName
+            user.surname = secondName
+//            StorageManager.shared.saveUser(user)
+            StorageManager.shared.saveUserToFile(user)
         }
         
         firstNameTextField.text = nil
